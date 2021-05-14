@@ -1,0 +1,151 @@
+library(plm)
+library(lmtest)
+library(foreign)
+library(sandwich)
+library(stargazer)
+library(tidyverse)
+library(haven)
+
+#Comando para ler base de dados:
+dados <- read_dta("C:/Users/saphi/OneDrive/Documentos/USP/1.2021/Econometria II/R/pubtwins.DTA")
+
+#Calcular betas
+#Montando as matrizes 
+
+Y <- matrix(c(8,5,4,3,1), ncol=1, nrow=5, byrow=F)
+Y
+X <- matrix(c(1,1,1,1,1,5,3,3,1,1,1,2,2,3,4), ncol = 3, nrow = 5, byrow=F)
+X
+
+ybarra <- mean(Y)
+ybarra
+
+#Transposta de XT
+XT <- t(X)
+XT
+#Calculando XTx
+XTX <- XT %*% X
+XTX
+#Calculando XTy
+XTY <- XT %*% Y
+XTY
+
+#Calculando TY 
+YT <- t(y)
+YT
+invXTX <- solve(XTX)
+invXTX
+
+betas <- invXTX %*% XTY
+betas
+
+#Calculando o resíduo 
+XBETA <- X %*% betas
+XBETA
+ECHAPEU <- Y - XBETA
+ECHAPEU
+
+#Achando a variância total
+ECHAPEUT <- t(ECHAPEU)
+ECHAPEUT
+n<-nrow(Y)
+k<-3
+SIGMA2 <- as.numeric((ECHAPEUT%*%ECHAPEU)/(n-k))
+SIGMA2
+
+#Matriz de variância e covariância 
+mavcov<-SIGMA2*invXTX
+print(mavcov)
+ep<-sqrt(diag(mavcov))
+ep
+
+ep_beta_1<-ep[1]
+ep_beta_2<-ep[2]
+ep_beta_3<-ep[3]
+cbind(ep_beta_1, ep_beta_2, ep_beta_3)
+
+#Obtendo primeiro o teste de significância Valor 
+#tabelados de t para 1%, 5% e 10%
+gl<-(1000-k)
+qt(0.005, gl)
+qt(0.025, gl)
+qt(0.05, gl)
+tabelado1<-abs(qt(0.005, gl))
+tabelado1
+tabelado5<-abs(qt(0.025, gl))
+tabelado5
+tabelado10<-abs(qt(0.05, gl))
+tabelado10
+
+#Se ele é significante
+tbeta1<-((betas[1]-0)/ep_beta_1)
+tbeta1
+tbeta2<-((betas[2]-0)/ep_beta_2)
+tbeta2
+tbeta3<-((betas[3]-0)/ep_beta_3)
+tbeta3
+
+i.c.inferior<-betas[1]-ep_beta_1*tabelado1
+i.c.inferior
+i.c.superior<-betas[1]+ep_beta_1*tabelado1
+cbind(i.c.inferior, i.c.superior)
+
+#Calcular o coeficiente de determinação R
+#obtendo o r2
+SQE <- t(betas)%*%XTY-n*(ybarra^2)
+YT <- t(Y)
+YTY<-YT%*%Y
+SQR <- YTY-t(betas) %*% XTY
+SQT <- YTY-n*(ybarra^2)
+
+cbind(SQE, SQT, SQR)
+
+R2 <- SQE/SQT
+print(R2)
+
+#Algumas regressões
+crime4<- read.dta("http://fmwww.bc.edu/ec-p/data/wooldridge/crime4.dta")
+crime4.p<-pdata.frame(crime4, index=c("county", "year"))
+print(crime4.p)
+
+#Rodando crmrate contra d83,d84, d85,d86,e87, lprbarr, lprbconv, lprebpris, lavgsen, lpolp e urban
+regressao<-(plm(log(crmrte)~d83+d84+d85+d86+d87+lprbarr+lprbconv+lprbpris+lavgsen+
+                  lpolpc+urban, data=crime4.p, model="pooling"))
+coeftest(regressao)
+summary(regressao)
+regressao_dummy<-(plm(log(crmrte)~factor(year)+lprbarr+lprbconv+lprbpris+lavgsen+
+                        lpolpc+urban, data=crime4.p, model="pooling"))
+coeftest(regressao_dummy)
+summary(regressao_dummy)
+
+coeftest(regressao, vcov.=vcovHC)
+summary(regressao, vcov.=vcovHC)
+
+#Potential Outcome 
+#Montando matriz 
+
+Y1 <- matrix(c(7,5,5,7,4,10,1,5,3,9), ncol = 1, nrow=10, byrow=F)
+Y1
+Y0 <- matrix(c(1,6,1,8,2,1,10,6,7,8), ncol = 1, nrow = 10, byrow=F)
+Y0
+D <- matrix(c(1,0,1,0,1,1,0,0,0,1), ncol=1, nrow=10, byrow=F)
+D
+SDO <- cbind(Y1, Y0, D)
+ATE <- mean(Y1)-mean(Y0)
+ATE
+#the average treatment effect of surgery across these specific patients is 0.6
+#additional years (compared to chemotherapy)
+#Calculate ATT (D=1, Y=1)
+att1 <- matrix(c(7,5,4,10,9), ncol=1, nrow=5, byrow=F)
+att0 <- matrix(c(1,1,2,1,8), ncol=1, nrow=5, byrow=F)
+att <- mean(att1) - mean(att0)
+att
+
+#Caluclate ATU (D=0)
+atu1 <- matrix(c(5,7,1,5,3), ncol=1, nrow=5,byrow=F)
+atu0 <- matrix(c(6,8,10,6,7), ncol=1, nrow=5, byrow=F)
+atu <- mean(atu1)-mean(atu0)
+atu
+
+Potential_outcomes <- cbind(ATE, att, atu)
+Potential_outcomes
