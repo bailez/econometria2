@@ -27,7 +27,3 @@ coeftest(reg)
 
 print("Teste Robusto")
 coeftest(reg, vcov. = vcovHC)
-
-# The season coeficient is not statistically significant. It's p-value is very big
-# (0.57228) in both robust and regular coeficient tests
-
