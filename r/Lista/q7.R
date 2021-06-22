@@ -1,4 +1,7 @@
 # Load rddtools package
+
+# http://erikgahner.dk/slides/2015-aas/12-rdd.pdf
+
 library("rddtools")
 library("wooldridge")
 library("rdrobust")
