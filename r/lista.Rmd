@@ -1,0 +1,63 @@
+---
+title: "Estudos em Econometria 2"
+author: "Felipe Bailez"
+date: "15/06/2021"
+output: pdf_document
+header-includes:
+- \usepackage[brazilian]{babel}
+- \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+## Istrument Variable
+
+```{r}
+
+Y <- matrix(c(8, 5, 4, 3, 1), ncol = 1, nrow = 5, byrow = F)
+X <- matrix(c(1, 1, 1, 1, 1, 5, 3, 3, 1, 1, 1, 2, 2,
+              3, 4), ncol = 3, nrow = 5, byrow = F)
+
+XT <- t(X)
+XTX <- XT %*% X
+XTX
+XTY <- XT %*% Y
+XTY
+
+YT <- t(Y)
+invXTX <- solve(XTX)
+invXTX
+
+betas <- invXTX %*% XTY
+betas
+
+
+
+# EXEMPLO COM BETA IV COM UM INSTRUMENTAL
+Y <- matrix(c(8, 5, 4, 3, 1), ncol = 1, nrow = 5, byrow = F)
+Z <- matrix(c(1, 1, 1, 1, 1, 14, 8, 9, 2, 4, 1, 2, 2,
+              3, 4), ncol = 3, nrow = 5, byrow = F)
+print(Z)
+
+
+
+ZT <- t(Z)
+ZTX <- ZT %*% X
+ZTX
+ZTY <- ZT %*% Y
+ZTY
+
+YT <- t(Y)
+invZTX <- solve(ZTX)
+invZTX
+
+BETAIV<- invZTX %*%ZTY
+BETAIV
+betas
+
+
+```
