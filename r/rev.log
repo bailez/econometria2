@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.6.16)  16 JUN 2021 15:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.6.16)  29 JUN 2021 16:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -341,9 +341,9 @@ Package graphics Info: Driver file: pdftex.def on input line 107.
 \Gin@req@height=\dimen165
 \Gin@req@width=\dimen166
 ) (c:/texlive/2021/texmf-dist/tex/generic/babel/babel.sty
-Package: babel 2021/06/02 3.60 The Babel package
+Package: babel 2021/06/28 3.61 The Babel package
 (c:/texlive/2021/texmf-dist/tex/generic/babel/babel.def
-File: babel.def 2021/06/02 3.60 Babel common definitions
+File: babel.def 2021/06/28 3.61 Babel common definitions
 \babel@savecnt=\count288
 \U@D=\dimen167
 \l@unhyphenated=\language87
@@ -529,12 +529,12 @@ File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 <inserted text> 
                 $
 l.317 onde \$ Cov(Z,\varepsilon
-                               ) = 0 \$ e \$\beta \neqq \$ 
+                               ) = 0 \$ e \$\beta \neq 0 \$ . Sabendo que 
 Here is how much of TeX's memory you used:
- 13874 strings out of 478512
- 205714 string characters out of 5853626
- 578016 words of memory out of 5000000
- 31521 multiletter control sequences out of 15000+600000
+ 13882 strings out of 478512
+ 205840 string characters out of 5853626
+ 578396 words of memory out of 5000000
+ 31529 multiletter control sequences out of 15000+600000
  454940 words of font info for 100 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  74i,6n,80p,731b,360s stack positions out of 5000i,500n,10000p,200000b,80000s
